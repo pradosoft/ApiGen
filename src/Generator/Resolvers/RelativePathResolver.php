@@ -27,13 +27,18 @@ final class RelativePathResolver
 
     public function getRelativePath(string $fileName): string
     {
-        foreach ($this->configuration->getOption(ConfigurationOptions::SOURCE) as $directory) {
+        /** @var string[] $sources */
+        $sources = $this->configuration->getOption(ConfigurationOptions::SOURCE);
+        foreach ($sources as $directory) {
             if (strpos($fileName, $directory) === 0) {
                 return $this->getFileNameWithoutSourcePath($fileName, $directory);
             }
         }
 
-        throw new InvalidArgumentException(sprintf('Could not determine "%s" relative path', $fileName));
+        throw new InvalidArgumentException(sprintf(
+            'Could not determine "%s" relative path',
+            $fileName
+        ));
     }
 
     private function getFileNameWithoutSourcePath(string $fileName, string $directory): string
