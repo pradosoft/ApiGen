@@ -29,7 +29,7 @@ final class GenerateCommandExecuteTest extends AbstractContainerAwareTestCase
 
     public function testExecute(): void
     {
-        $this->assertFileNotExists(TEMP_DIR . '/Api/index.html');
+        $this->assertFileNotExists(TEMP_DIR . '/api/index.html');
 
         $input = new ArrayInput([
             ConfigurationOptions::SOURCE => [__DIR__ . '/Source'],
@@ -42,7 +42,7 @@ final class GenerateCommandExecuteTest extends AbstractContainerAwareTestCase
             $exitCode
         );
 
-        $this->assertFileExists(TEMP_DIR . '/Api/index.html');
+        $this->assertFileExists(TEMP_DIR . '/api/index.html');
     }
 
     /**
