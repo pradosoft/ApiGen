@@ -42,18 +42,18 @@ class ElementLinkFactory
     /**
      * @return string
      */
-    public function createForElement(ElementReflectionInterface $element, array $classes = [])
+    public function createForElement(ElementReflectionInterface $element, array $classes = [], $overrideElementDescription = '')
     {
         if ($element instanceof ClassReflectionInterface) {
-            return $this->createForClass($element, $classes);
+            return $this->createForClass($element, $classes, $overrideElementDescription);
         } elseif ($element instanceof MethodReflectionInterface) {
-            return $this->createForMethod($element, $classes);
+            return $this->createForMethod($element, $classes, $overrideElementDescription);
         } elseif ($element instanceof PropertyReflectionInterface) {
-            return $this->createForProperty($element, $classes);
+            return $this->createForProperty($element, $classes, $overrideElementDescription);
         } elseif ($element instanceof ConstantReflectionInterface) {
-            return $this->createForConstant($element, $classes);
+            return $this->createForConstant($element, $classes, $overrideElementDescription);
         } elseif ($element instanceof FunctionReflectionInterface) {
-            return $this->createForFunction($element, $classes);
+            return $this->createForFunction($element, $classes, $overrideElementDescription);
         }
 
         throw new UnexpectedValueException(
@@ -66,11 +66,11 @@ class ElementLinkFactory
     /**
      * @return string
      */
-    private function createForClass(ClassReflectionInterface $reflectionClass, array $classes)
+    private function createForClass(ClassReflectionInterface $reflectionClass, array $classes, $overrideElementDescription)
     {
         return $this->linkBuilder->build(
             $this->elementUrlFactory->createForClass($reflectionClass),
-            $reflectionClass->getName(),
+            $overrideElementDescription ? $overrideElementDescription : $reflectionClass->getName(),
             true,
             $classes
         );
@@ -80,11 +80,13 @@ class ElementLinkFactory
     /**
      * @return string
      */
-    private function createForMethod(MethodReflectionInterface $reflectionMethod, array $classes)
+    private function createForMethod(MethodReflectionInterface $reflectionMethod, array $classes, $overrideElementDescription)
     {
         return $this->linkBuilder->build(
             $this->elementUrlFactory->createForMethod($reflectionMethod),
-            $reflectionMethod->getDeclaringClassName() . '::' . $reflectionMethod->getName() . '()',
+            $overrideElementDescription ?
+                $overrideElementDescription :
+                $reflectionMethod->getDeclaringClassName() . '::' . $reflectionMethod->getName() . '()',
             false,
             $classes
         );
@@ -94,10 +96,12 @@ class ElementLinkFactory
     /**
      * @return string
      */
-    private function createForProperty(PropertyReflectionInterface $reflectionProperty, array $classes)
+    private function createForProperty(PropertyReflectionInterface $reflectionProperty, array $classes, $overrideElementDescription)
     {
-        $text = $reflectionProperty->getDeclaringClassName() . '::' .
-            Html::el('var')->setText('$' . $reflectionProperty->getName());
+        $text = $overrideElementDescription ?
+            $overrideElementDescription :
+            $reflectionProperty->getDeclaringClassName() . '::' .
+                Html::el('var')->setText('$' . $reflectionProperty->getName());
 
         return $this->linkBuilder->build(
             $this->elementUrlFactory->createForProperty($reflectionProperty),
@@ -111,11 +115,13 @@ class ElementLinkFactory
     /**
      * @return string
      */
-    private function createForConstant(ConstantReflectionInterface $reflectionConstant, array $classes)
+    private function createForConstant(ConstantReflectionInterface $reflectionConstant, array $classes, $overrideElementDescription)
     {
         $url = $this->elementUrlFactory->createForConstant($reflectionConstant);
 
-        if ($reflectionConstant->getDeclaringClassName()) {
+        if($overrideElementDescription) {
+            $text = $overrideElementDescription;
+        } elseif ($reflectionConstant->getDeclaringClassName()) {
             $text = $reflectionConstant->getDeclaringClassName() . '::' .
                 Html::el('b')->setText($reflectionConstant->getName());
         } else {
@@ -129,11 +135,13 @@ class ElementLinkFactory
     /**
      * @return string
      */
-    private function createForFunction(FunctionReflectionInterface $reflectionFunction, array $classes)
+    private function createForFunction(FunctionReflectionInterface $reflectionFunction, array $classes, $overrideElementDescription)
     {
         return $this->linkBuilder->build(
             $this->elementUrlFactory->createForFunction($reflectionFunction),
-            $reflectionFunction->getName() . '()',
+            $overrideElementDescription ?
+                $overrideElementDescription :
+                $reflectionFunction->getName() . '()',
             true,
             $classes
         );

@@ -84,6 +84,7 @@ class UrlFilters extends Filters
      */
     public function resolveLink($definition, ElementReflectionInterface $reflectionElement)
     {
+        list($definition, $description) = Strings::split($definition);
         if (empty($definition)) {
             return null;
         }
@@ -109,7 +110,7 @@ class UrlFilters extends Filters
             $classes[] = 'invalid';
         }
 
-        $link = $this->createLinkForElement($element, $classes);
+        $link = $this->createLinkForElement($element, $classes, $description);
         return '<code>' . $link . $suffix . '</code>';
     }
 
@@ -262,12 +263,11 @@ class UrlFilters extends Filters
     private function resolveLinkAndSeeAnnotation($text, ElementReflectionInterface $reflectionElement)
     {
         return preg_replace_callback('~{@(?:link|see)\\s+([^}]+)}~', function ($matches) use ($reflectionElement) {
-            list($url, $description) = Strings::split($matches[1]);
-
             if ($link = $this->resolveLink($matches[1], $reflectionElement)) {
                 return $link;
             }
 
+            list($url, $description) = Strings::split($matches[1]);
             if (Validators::isUri($url)) {
                 return $this->linkBuilder->build($url, $description ?: $url);
             }
@@ -306,9 +306,9 @@ class UrlFilters extends Filters
     /**
      * @return string
      */
-    private function createLinkForElement($reflectionElement, array $classes)
+    private function createLinkForElement($reflectionElement, array $classes, $decription='')
     {
-        return $this->elementLinkFactory->createForElement($reflectionElement, $classes);
+        return $this->elementLinkFactory->createForElement($reflectionElement, $classes, $decription);
     }
 
 
