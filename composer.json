@@ -1,8 +1,8 @@
 {
-    "name": "apigen/apigen",
-    "description": "PHP source code API generator",
+    "name": "pradosoft/apigen",
+    "description": "PHP source code API generator - prado fork",
     "keywords": ["documentation", "phpdoc", "generator", "api"],
-    "homepage": "http://apigen.org/",
+    "homepage": "https://github.com/pradosoft/ApiGen",
     "license": "MIT",
     "authors": [
         { "name": "Tomáš Votruba", "homepage": "https://tomasvotruba.cz", "email": "tomas.vot@gmail.com" },
