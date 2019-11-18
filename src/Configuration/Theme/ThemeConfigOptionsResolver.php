@@ -16,9 +16,9 @@ use Nette;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ThemeConfigOptionsResolver extends Nette\Object
+class ThemeConfigOptionsResolver
 {
-
+    use Nette\SmartObject;
     /**
      * @var array
      */

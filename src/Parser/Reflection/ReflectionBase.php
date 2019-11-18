@@ -23,9 +23,9 @@ use TokenReflection\IReflectionMethod;
 use TokenReflection\IReflectionParameter;
 use TokenReflection\IReflectionProperty;
 
-abstract class ReflectionBase extends Nette\Object implements ReflectionInterface
+abstract class ReflectionBase implements ReflectionInterface
 {
-
+    use Nette\SmartObject;
     /**
      * @var string
      */

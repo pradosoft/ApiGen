@@ -36,7 +36,7 @@ class SymfonyEventDispatcher implements EventDispatcherInterface
     {
         $listeners = $this->eventDispatcher->getListeners($event->getName());
         foreach ($listeners as $listener) {
-            if (count($listener[0]) === 2) {
+            if (is_array($listener[0]) && count($listener[0]) === 2) {
                 $listener = $listener[0];
             }
             call_user_func($listener, $event);
